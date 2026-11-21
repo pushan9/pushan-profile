@@ -29,13 +29,15 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Check for profile updates this week
         id: changes
         if: github.event_name == 'schedule'
         shell: bash
         run: |
-          if git log --since="7 days ago" --format=%H -- index.html | grep -q .; then
+          if git log --since="7 days ago" --format=%H -- . ':!.github/workflows/deploy-pages.yml' | grep -q .; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
