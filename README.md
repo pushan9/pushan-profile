@@ -17,3 +17,5 @@ GitHub Pages publishes the profile site publicly. Personal email and phone detai
 ## Profile content
 
 The page summarizes experience and achievements from the supplied resumes. Personal email and phone details are intentionally not included.
+
+Use **Download PDF** on the page and choose **Save as PDF** in the browser's print dialog. The print layout includes every profile section, not just the currently selected tab.
