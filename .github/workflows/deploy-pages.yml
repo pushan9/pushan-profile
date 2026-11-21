@@ -1,0 +1,56 @@
+name: Update profile site
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  schedule:
+    - cron: "15 3 * * 6"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Check for profile updates this week
+        id: changes
+        if: github.event_name == 'schedule'
+        shell: bash
+        run: |
+          if git log --since="7 days ago" --format=%H -- index.html | grep -q .; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure GitHub Pages
+        if: github.event_name != 'schedule' || steps.changes.outputs.changed == 'true'
+        uses: actions/configure-pages@v5
+
+      - name: Upload the profile site
+        if: github.event_name != 'schedule' || steps.changes.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        if: github.event_name != 'schedule' || steps.changes.outputs.changed == 'true'
+        uses: actions/deploy-pages@v4
