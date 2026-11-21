@@ -10,9 +10,9 @@ Open `index.html` in a browser.
 
 The workflow in `.github/workflows/deploy-pages.yml` deploys the page after changes are pushed and checks for profile-page changes every Saturday at 03:15 UTC. The scheduled deployment is skipped if `index.html` has not changed in the previous seven days.
 
-The repository is intended to remain private for now. GitHub Pages availability and visibility for private repositories depend on the GitHub plan and repository settings. To avoid unintentionally publishing the profile, the workflow runs its deployment job only when the repository is public. When the repository is made public, the workflow deploys immediately; make it public when you are ready for the site to be visible.
+This repository is public. GitHub Pages is configured to deploy through the `Update profile site` GitHub Actions workflow. The workflow runs on pushes, checks for profile-page changes every Saturday at 03:15 UTC, and deploys when the repository is public.
 
-Before the first deployment, open **Settings → Pages** and set the build and deployment source to **GitHub Actions**. The workflow does not change repository visibility or Pages settings.
+GitHub Pages publishes the profile site publicly. Personal email and phone details are intentionally not included.
 
 ## Profile content
 
