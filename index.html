@@ -168,12 +168,21 @@
 
     .tabs {
       display: flex;
-      gap: 5px;
-      overflow-x: auto;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
       padding: 6px;
       border: 1px solid var(--line);
       border-radius: 14px;
       background: rgb(23 31 28 / 86%);
+    }
+
+    .tab-list {
+      display: flex;
+      flex: 1 1 auto;
+      min-width: 0;
+      gap: 5px;
+      overflow-x: auto;
       scrollbar-width: thin;
     }
 
@@ -196,6 +205,12 @@
       color: var(--text);
       background: var(--panel-raised);
       box-shadow: inset 0 0 0 1px var(--line);
+    }
+
+    .pdf-tab {
+      flex: 0 0 auto;
+      color: var(--text);
+      background: var(--accent-dark);
     }
 
     .tab:focus-visible, a:focus-visible {
@@ -382,6 +397,45 @@
         transition-duration: .01ms !important;
       }
     }
+  
+
+    @media print {
+      @page { margin: 14mm; }
+
+      body {
+        min-width: 0;
+        color: #111;
+        background: #fff;
+        font-size: 11pt;
+      }
+
+      .shell { width: 100%; }
+      .topbar { padding-block: 0 12px; border-color: #bbb; }
+      .availability::before { display: none; }
+      .tabs, .footer { display: none; }
+      main { padding: 0; }
+      .hero { grid-template-columns: minmax(0, 1fr) 220px; gap: 18px; padding-block: 18px; }
+      h1 { max-width: none; font-size: 30pt; }
+      h1 span, .eyebrow, .section-kicker, .card .label, .role .dates { color: #234b80; }
+      .hero-copy, .metric span, .heading-note, .card p, .role .title, .role .detail { color: #333; }
+      .hero-aside, .metric, .card, .role, .tag-list li, .credential-list li {
+        color: #111;
+        background: #fff;
+        border-color: #bbb;
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      .panel, .panel[hidden] {
+        display: block !important;
+        min-height: 0;
+        padding: 18px 0 0;
+        animation: none;
+      }
+
+      .panel + .panel { break-before: page; }
+      .tab-list { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -416,13 +470,16 @@
         <div class="metric"><strong>100+</strong><span>Cross-functional team members led</span></div>
       </section>
 
-      <nav class="tabs" role="tablist" aria-label="Profile sections">
-        <button class="tab" id="tab-profile" type="button" role="tab" aria-selected="true" aria-controls="profile" tabindex="0">Profile</button>
-        <button class="tab" id="tab-experience" type="button" role="tab" aria-selected="false" aria-controls="experience" tabindex="-1">Experience</button>
-        <button class="tab" id="tab-work" type="button" role="tab" aria-selected="false" aria-controls="work" tabindex="-1">Selected work</button>
-        <button class="tab" id="tab-skills" type="button" role="tab" aria-selected="false" aria-controls="skills" tabindex="-1">Skills</button>
-        <button class="tab" id="tab-credentials" type="button" role="tab" aria-selected="false" aria-controls="credentials" tabindex="-1">Education &amp; credentials</button>
-      </nav>
+      <div class="tabs">
+        <nav class="tab-list" role="tablist" aria-label="Profile sections">
+          <button class="tab" id="tab-profile" type="button" role="tab" aria-selected="true" aria-controls="profile" tabindex="0">Profile</button>
+          <button class="tab" id="tab-experience" type="button" role="tab" aria-selected="false" aria-controls="experience" tabindex="-1">Experience</button>
+          <button class="tab" id="tab-work" type="button" role="tab" aria-selected="false" aria-controls="work" tabindex="-1">Selected work</button>
+          <button class="tab" id="tab-skills" type="button" role="tab" aria-selected="false" aria-controls="skills" tabindex="-1">Skills</button>
+          <button class="tab" id="tab-credentials" type="button" role="tab" aria-selected="false" aria-controls="credentials" tabindex="-1">Education &amp; credentials</button>
+        </nav>
+        <button class="tab pdf-tab" id="download-pdf" type="button" title="Open the print dialog and choose Save as PDF">Download PDF</button>
+      </div>
 
       <section class="panel" id="profile" role="tabpanel" aria-labelledby="tab-profile" tabindex="0">
         <div class="panel-heading">
@@ -696,6 +753,8 @@
         activateTab(tabs[nextIndex], true);
       });
     });
+
+    document.getElementById('download-pdf').addEventListener('click', () => window.print());
   </script>
 </body>
 </html>
